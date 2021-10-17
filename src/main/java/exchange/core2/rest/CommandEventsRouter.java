@@ -154,13 +154,10 @@ public class CommandEventsRouter implements ObjLongConsumer<OrderCommand> {
                 // todo aggregate ticks having same price
                 ticks.add(new TickRecord(tradePrice, evt.size, evt.timestamp, evt.activeOrderAction));
 
-            } else if (evt.eventType == MatcherEventType.REJECTION) {
+            } else if (evt.eventType == MatcherEventType.REJECT) {
                 final GatewayUserProfile profile = gatewayState.getOrCreateUserProfile(evt.activeOrderUid);
                 profile.rejectOrder(evt.activeOrderId, order -> sendOrderUpdate(evt.activeOrderUid, order));
 
-            } else if (evt.eventType == MatcherEventType.CANCEL) {
-                final GatewayUserProfile profile = gatewayState.getOrCreateUserProfile(evt.activeOrderUid);
-                profile.cancelOrder(evt.activeOrderId, order -> sendOrderUpdate(evt.activeOrderUid, order));
             }
         }
 
@@ -211,11 +208,7 @@ public class CommandEventsRouter implements ObjLongConsumer<OrderCommand> {
                 MatchingRole role = evt.activeOrderId == cmd.orderId ? MatchingRole.TAKER : MatchingRole.MAKER;
                 tradeRecords.add(NewTradeRecord.builder().filledSize(evt.size).fillPrice(evt.price).matchingRole(role).build());
 
-            } else if (evt.eventType == MatcherEventType.CANCEL) {
-
-                tradeRecords.add(ReduceRecord.builder().reducedSize(evt.size).build());
-
-            } else if (evt.eventType == MatcherEventType.REJECTION) {
+            } else if (evt.eventType == MatcherEventType.REJECT) {
 
                 tradeRecords.add(RejectionRecord.builder().rejectedSize(evt.size).build());
 
@@ -250,7 +243,7 @@ public class CommandEventsRouter implements ObjLongConsumer<OrderCommand> {
             return null;
         }
 
-        log.debug("MARKET DATA: " + cmd.marketData.dumpOrderBook());
+        // log.debug("MARKET DATA: " + cmd.marketData.dumpOrderBook());
 
         L2MarketData marketData = cmd.marketData;
         OrderBookEvent orderBook = new OrderBookEvent(
