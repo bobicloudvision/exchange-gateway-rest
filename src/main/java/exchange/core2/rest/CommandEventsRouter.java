@@ -94,7 +94,7 @@ public class CommandEventsRouter implements ObjLongConsumer<OrderCommand> {
 
         // TODO
 
-        if (cmd.command == OrderCommandType.BINARY_DATA) {
+        if (cmd.command == OrderCommandType.BINARY_DATA_COMMAND) {
             // ignore binary commands further
             return;
         }

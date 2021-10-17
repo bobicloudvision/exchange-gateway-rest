@@ -17,8 +17,8 @@ package exchange.core2.rest;
 
 import exchange.core2.core.ExchangeCore;
 import exchange.core2.core.common.CoreWaitStrategy;
-import exchange.core2.core.orderbook.OrderBookFastImpl;
-import exchange.core2.core.processors.journalling.DiskSerializationProcessor;
+//import exchange.core2.core.orderbook.OrderBookFastImpl;
+//import exchange.core2.core.processors.journalling.DiskSerializationProcessor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
@@ -28,7 +28,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
-import static exchange.core2.core.utils.UnsafeUtils.ThreadAffinityMode.THREAD_AFFINITY_ENABLE_PER_LOGICAL_CORE;
+//import static exchange.core2.core.utils.UnsafeUtils.ThreadAffinityMode.THREAD_AFFINITY_ENABLE_PER_LOGICAL_CORE;
 
 @SpringBootApplication
 @EnableConfigurationProperties
@@ -47,14 +47,14 @@ public class RestGatewayApplication {
 
         return ExchangeCore.builder()
                 .resultsConsumer(eventsRouter)
-                .serializationProcessor(new DiskSerializationProcessor("./dumps"))
+              //  .serializationProcessor(new DiskSerializationProcessor("./dumps"))
                 .ringBufferSize(4096)
                 .matchingEnginesNum(1)
                 .riskEnginesNum(1)
                 .msgsInGroupLimit(1024)
-                .threadAffinityMode(THREAD_AFFINITY_ENABLE_PER_LOGICAL_CORE)
+              //  .threadAffinityMode(THREAD_AFFINITY_ENABLE_PER_LOGICAL_CORE)
                 .waitStrategy(CoreWaitStrategy.SLEEPING)
-                .orderBookFactory(symbolType -> new OrderBookFastImpl(OrderBookFastImpl.DEFAULT_HOT_WIDTH, symbolType))
+             //   .orderBookFactory(symbolType -> new OrderBookFastImpl(OrderBookFastImpl.DEFAULT_HOT_WIDTH, symbolType))
 //                .orderBookFactory(OrderBookNaiveImpl::new)
 //                .loadStateId(stateId) // Loading from persisted state
                 .build();
